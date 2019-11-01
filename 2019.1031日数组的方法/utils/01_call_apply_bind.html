@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>函数的call/apply/bind()</title>
+</head>
+<body>
+
+  <!-- call/apply/bind区别?
+  三者都是用来强制改变this指向,
+  call/apply会调用函数,而且是立即调用,指定函数中的this为第一个参数的值
+  call/apply作用相同.只是传参有区别,call传参只能一个一个传,apply可以传数组
+  传参比较复杂时可以用apply
+
+  bind:会返回一个新的函数,新函数内部会调用原来的函数,this为第一个参数的值
+  经过测试,这三者如果第一个函数是null/undefined,那this指向是window -->
+  <script>
+    // 1.自定义call()
+    Function.prototype.call = function (obj,...rest) {
+      // this(...rest)   直接调用this是window,不能用
+
+      // 第一个参数是null/nuderfined,  this是window
+      if (obj === null || obj ===undefined) {
+        // obj = window
+      }
+
+      // 给obj添加一个临时方法,方法名为:tempFn:this
+      obj.tempFn = this
+      // 通过tempFn调用this
+      const result = obj.tempFn(...rest)
+      // 删除临时方法
+      delete obj.tempFn
+
+      return result
+    }
+
+
+
+
+    //2. 自定义apply()
+Function.prototype.apply = function (obj,args) {
+  if (obj === null || obj === undefined) {
+    return this(...args)
+    // this = window
+  }
+   // 给obj添加一个临时方法,方法名为:tempFn:this
+   obj.tempFn = this
+      // 通过tempFn调用this
+      const result = obj.tempFn(...args)
+      // 删除临时方法
+      delete obj.tempFn
+
+      return result
+}
+
+
+
+    // 3.自定义bind()
+    Function.prototype.bind = function (obj,...args) {
+      const that = this
+      // console.log('my bind')   返回一个新的函数
+      return function (...args2) {
+        // 新函数内部会执行原来的函数(通过call来执行)
+        return that.call(obj,...args,...args2)
+      }
+    }
+  </script>
+  
+
+
+
+
+  <script>
+    function fn(a, b) {
+      console.log(a, b, this)
+    }
+
+    const obj = {m: 1}
+
+    fn.call(obj, 2, 3)  // 相当于执行了obj.fn(2, 3)
+    fn.apply(obj, [2, 3])
+    fn.bind(obj)(2, 3)
+    fn.bind(obj, 4)(2, 3)   // 返回一个新函数==> 执行新函数 => 内部会执行原来的函数, 原函数中的this为bind的第一个参数
+  </script>
+
+</body>
+</html>
