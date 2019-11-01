@@ -23,11 +23,43 @@
   beforeDestory(): 做收尾工作, 如: 清除定时器
 -->
 
-<div>
+<div id = 'test'>
+  <button @click = 'destroyVM'>destory vue</button>
+  <h2 v-show = 'isShow'>HELLo World</h2>
 
 </div>
 
 <script type="text/javascript" src="../js/vue.js"></script>
-<script type="text/javascript"></script>
+<script type="text/javascript">
+
+
+new Vue({
+  el:'#test',
+  data:{
+    isShow:true
+  },
+// 页面初始显示执行一次
+mounted(){
+  this.intervalId = setInterval(() =>{
+    console.log('---')
+    this.isShow = !this.isShow
+  },1000)
+},
+
+// 在vm死亡之前执行一次,做收尾工作,清除定时器
+beforeDestroy(){
+  clearInterval(this.intervalId)
+},
+methods:{
+  destroyVM(){
+    this.$destroy()
+  }
+},
+})
+
+
+
+
+</script>
 </body>
 </html>

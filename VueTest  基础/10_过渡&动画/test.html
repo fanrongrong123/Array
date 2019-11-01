@@ -21,9 +21,73 @@
 -->
 
 
+<style>
+  /* 样式 */
+  /* 过渡样式(固定写法) */
+
+  .fade-enter-active,.fade-leave-active{
+  transform: opacity 3s;
+  }
+
+  /* 隐藏时样式 */
+  .fade-enter,.fade-leave-to{
+    opacity: 0;
+  }
+
+  /* 显示时样式 */
+  .move-enter-active{
+    transition: all 2s;
+  }
+
+
+/* 隐藏的过度样式 */
+
+.move-leave-active{
+  transition: all 2s;
+}
+
+
+  /* 隐藏的样式 */
+  .move-enter,.move-leave-to{
+    opacity: 0;
+    /* 水平位移 */
+    transform: translateX(20px);
+  }
+</style>
+
+
+
+<div id = 'demo'>
+  <button v-on:click = 'show = !show'>Toggle</button>
+  <transition name = 'fade'>
+    <p v-if = 'show'>HELLO</p>
+  </transition>
+</div>
+
+
+<div id = 'demo2'>
+    <button v-on:click = 'show = !show'>Toggle</button>
+    <transition name = 'move'>
+      <p v-if = 'show'>hello</p>
+    </transition>
+  </div>
+
+
 <script type="text/javascript" src="../js/vue.js"></script>
 <script type="text/javascript">
+new Vue({
+  el:'#demo',
+  data:{
+    show:true
+  }
+})
 
+new Vue({
+  el:'#demo2',
+  data:{
+    show:true
+  }
+})
 </script>
 </body>
 </html>
